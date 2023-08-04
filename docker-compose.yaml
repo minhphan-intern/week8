@@ -18,6 +18,8 @@ services:
     command:
       - '--path.rootfs=/host'
     pid: host
+    ports:
+      - '9187:9187'
     restart: unless-stopped
     volumes:
       - '/:/host:ro,rslave'
