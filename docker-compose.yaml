@@ -1,17 +1,5 @@
 version: '3'
 services:
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus:v2.45.0
-    ports:
-      - '9090:9090'
-    command:
-      - --enable-feature=remote-write-receiver
-      - --config.file=/etc/prometheus/prometheus.yml
-    volumes:
-      - ./prometheus_config:/etc/prometheus
-    restart: unless-stopped
-    tty: true
   node_exporter:
     image: quay.io/prometheus/node-exporter:latest
     container_name: node_exporter
@@ -23,5 +11,13 @@ services:
     restart: unless-stopped
     volumes:
       - '/:/host:ro,rslave'
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter
+    ports:
+      - '9187:9187'
+    environment:
+      DATA_SOURCE_NAME: postgresql://postgres_exporter:odoo@192.168.56.10:5432/postgres?sslmode=disable
+    tty: true
+    restart: always
 volumes:
   grafana_storage: {}
