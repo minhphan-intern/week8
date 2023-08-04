@@ -1,0 +1,25 @@
+version: '3'
+services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.45.0
+    ports:
+      - '9090:9090'
+    command:
+      - --enable-feature=remote-write-receiver
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./prometheus_config:/etc/prometheus
+    restart: unless-stopped
+    tty: true
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    command:
+      - '--path.rootfs=/host'
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+volumes:
+  grafana_storage: {}
